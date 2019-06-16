@@ -17,7 +17,6 @@ app.get('/getNote', function (req, res) {
 app.post('/updateNote/:note', function (req, res) {
     fs.readFile('./firstTask.json', 'utf8', function (err, data) {
         if (err) throw err;
-        stringifyFile = data;
         stringifyFile = data + req.params.note;
         fs.writeFile('./firstTask.json', stringifyFile, function (err) {
             if (err) throw err;
