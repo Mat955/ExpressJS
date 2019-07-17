@@ -1,32 +1,29 @@
 var express = require('express');
 var app = express();
 
-app.use('/', function (req, res, next) {
+app.use('/', (req, res, next) => {
     console.log('User authorization....');
     next();
-});
-
-app.use('/', function (req, res, next) {
-    console.log('Checking user permission...')
+}, (req, res, next) => {
+    console.log('Checking user permission...');
     next();
 })
 
-app.use('/store', function (req, res, next) {
+app.get('/', (req, res) => {
+    res.send('Hello world!');
+});
+
+app.use('/store', (req, res, next) => {
     console.log('I am an intermediary when requesting to /store');
     next();
 });
 
-app.get('/', function (req, res) {
-    res.send('Hello world!');
-});
-
-app.get('/store', function (req, res) {
+app.get('/store', (req, res) => {
     res.send('This is shop');
 });
 
-
 app.listen(3000);
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
     res.status(404).send('Sorry, we could not find what you want!');
 });
 
