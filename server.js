@@ -1,41 +1,31 @@
 var express = require('express');
 var app = express();
-var fs = require('fs');
-var bodyParser = require('body-parser');
-var stringifyFile;
 
-app.use(bodyParser.json());
+app.use('/', (req, res, next) => {
+    console.log('User authorization....');
+    next();
+}, (req, res, next) => {
+    console.log('Checking user permission...');
+    next();
+})
 
-app.get('/getNote', function (req, res) {
-    fs.readFile('./firstTask.json', 'utf8', function (err, data) {
-        if (err) throw err;
-        stringifyFile = data
-        res.send(data);
-    });
+app.get('/', (req, res) => {
+    res.send('Hello world!');
 });
 
-app.post('/updateNote/:note', function (req, res) {
-    fs.readFile('./firstTask.json', 'utf8', function (err, data) {
-        if (err) throw err;
-        stringifyFile = data + req.params.note;
-        fs.writeFile('./firstTask.json', stringifyFile, function (err) {
-            if (err) throw err;
-            console.log('file updated');
-            res.send(stringifyFile);
-        });
-    })
+app.use('/store', (req, res, next) => {
+    console.log('I am an intermediary when requesting to /store');
+    next();
 });
 
-var server = app.listen(3000);
+app.get('/store', (req, res) => {
+    res.send('This is shop');
+});
 
-
-
-
-
-
-
-
-
+app.listen(3000);
+app.use((req, res, next) => {
+    res.status(404).send('Sorry, we could not find what you want!');
+});
 
 
 
